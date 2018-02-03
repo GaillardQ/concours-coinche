@@ -89,6 +89,11 @@
           <button onclick="generateRanking()" type="button" class="btn btn-primary">Générer le classement</button>
         </div>
       </div>
+      <div class="row ranking-btn">
+        <div class="col-xs-12 align-center">
+          <button onclick="updateLastRound()" type="button" class="btn btn-primary">Générer le 3ème tour</button>
+        </div>
+      </div>
     </div>
     <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
     <script src="public/js/jquery.min.js?v=<?php echo $version; ?>"></script>

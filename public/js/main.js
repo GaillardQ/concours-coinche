@@ -207,17 +207,22 @@ function displayARound(index) {
         t1 = findTeam(val.t1.id);
         t2 = findTeam(val.t2.id);
         html += '<div class="row">';
-        html += '   <div class="col-xs-6">';
+        html += '   <div class="col-xs-5">';
         html += '       <div class="input-group">';
         html += '           <span class="input-group-addon">(#' + parseInt(t1.id+1) + ') ' + t1.p1 + ' / ' + t1.p2 + '</span>';
         html += '           <input type="text" id="round' + index + '_team' + t1.id + '" class="form-control" placeholder="score" value="' + val.t1.score + '" >';
         html += '       </div>';
         html += '   </div>';
-        html += '   <div class="col-xs-6">';
+        html += '   <div class="col-xs-5">';
         html += '       <div class="input-group">';
         html += '           <span class="input-group-addon">(#' + parseInt(t2.id+1) + ') ' + t2.p1 + ' / ' + t2.p2 + '</span>';
         html += '           <input type="text" id="round' + index + '_team' + t2.id + '" class="form-control" placeholder="score" value="' + val.t2.score + '" >';
         html += '       </div>';
+        html += '   </div>';
+        html += '   <div class="col-xs-1">';
+        html += '       <button class="btn btn-primary" onClick="resetScore(' + index + ', ' + key + ')">';
+        html += '           RESET';
+        html += '       </button>';
         html += '   </div>';
         html += '</div>';
         gamesDiv.push( html );
@@ -225,15 +230,19 @@ function displayARound(index) {
     html = '';
     html += '<div class="row ranking-btn">';
     html += '    <div class="col-xs-12 align-center">';
-    html += '        <button onclick="scoreUpdated(' + index + ', ' + (index == json.rounds.length - 1) + ')" type="button" class="btn btn-primary">Enregistrer le score</button>';
+    html += '        <button onclick="scoreUpdated(' + index + ')" type="button" class="btn btn-primary">Enregistrer le score</button>';
     html += '    </div>';
     html += '</div>';
-console.log('Nb rounds : ' + roundGames.length);
     gamesDiv.push( html );
     $('#tour' + tabIndex + '-results').html(gamesDiv.join( "" ));
 }
-// function scoreUpdated(teamId, roundIndex, gameIndex, team, field, needUpdateLastRound) {
-function scoreUpdated(roundIndex, isLastRound) {
+function resetScore(roundIndex, gameIndex) {
+    var round = json.rounds[roundIndex][gameIndex].t1.score = 123;
+    var round = json.rounds[roundIndex][gameIndex].t2.score = 456;
+    setJSON();
+    generateRanking();
+}
+function scoreUpdated(roundIndex) {
     var round = json.rounds[roundIndex];
     for (var i in round) {
         var game = round[i];
@@ -245,10 +254,6 @@ function scoreUpdated(roundIndex, isLastRound) {
 
     setJSON();
     generateRanking();
-    if (!isLastRound) {
-console.log('Update last round');
-        updateLastRound();
-    }
 }
 function updateLastRound() {
     var round = [];
