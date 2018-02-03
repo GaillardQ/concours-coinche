@@ -1,6 +1,6 @@
 host = 'http://coinche.local'
 json = {title: '', teams: [], rounds:[]};
-rankingCols = {ID: 0, NAME: 1, PLUS: 2, LESS: 3, DIFF: 4, VICTORIES: 5};
+rankingCols = {ID: 0, NAME: 1, PLUS: 2, LESS: 3, DIFF: 4, VICTORIES: 5, RANKING: 6};
 dataSet = [];
 rankingTable = null;
 
@@ -45,7 +45,7 @@ function displayTeam() {
         var html = '';
         html += '<div class="row">';
         html += '   <div class="col-xs-1">';
-        html += '       #' + val.id;
+        html += '       #' + parseInt(val.id + 1);
         html += '   </div>';
         html += '   <div class="col-xs-4">';
         html += '       <input type="text" class="form-control" id="' + key + '_player1" placeholder="Joueur 1" value="' + val.p1 + '">';
@@ -209,13 +209,13 @@ function displayARound(index) {
         html += '<div class="row">';
         html += '   <div class="col-xs-6">';
         html += '       <div class="input-group">';
-        html += '           <span class="input-group-addon">(#' + t1.id + ') ' + t1.p1 + ' / ' + t1.p2 + '</span>';
+        html += '           <span class="input-group-addon">(#' + parseInt(t1.id+1) + ') ' + t1.p1 + ' / ' + t1.p2 + '</span>';
         html += '           <input type="text" id="round' + index + '_team' + t1.id + '" class="form-control" placeholder="score" value="' + val.t1.score + '" >';
         html += '       </div>';
         html += '   </div>';
         html += '   <div class="col-xs-6">';
         html += '       <div class="input-group">';
-        html += '           <span class="input-group-addon">(#' + t2.id + ') ' + t2.p1 + ' / ' + t2.p2 + '</span>';
+        html += '           <span class="input-group-addon">(#' + parseInt(t2.id+1) + ') ' + t2.p1 + ' / ' + t2.p2 + '</span>';
         html += '           <input type="text" id="round' + index + '_team' + t2.id + '" class="form-control" placeholder="score" value="' + val.t2.score + '" >';
         html += '       </div>';
         html += '   </div>';
@@ -225,14 +225,15 @@ function displayARound(index) {
     html = '';
     html += '<div class="row ranking-btn">';
     html += '    <div class="col-xs-12 align-center">';
-    html += '        <button onclick="scoreUpdated(' + index + ', ' + (index == roundGames.length - 1) + ')" type="button" class="btn btn-primary">Enregistrer le score</button>';
+    html += '        <button onclick="scoreUpdated(' + index + ', ' + (index == json.rounds.length - 1) + ')" type="button" class="btn btn-primary">Enregistrer le score</button>';
     html += '    </div>';
     html += '</div>';
+console.log('Nb rounds : ' + roundGames.length);
     gamesDiv.push( html );
     $('#tour' + tabIndex + '-results').html(gamesDiv.join( "" ));
 }
 // function scoreUpdated(teamId, roundIndex, gameIndex, team, field, needUpdateLastRound) {
-function scoreUpdated(roundIndex, needUpdateLastRound) {
+function scoreUpdated(roundIndex, isLastRound) {
     var round = json.rounds[roundIndex];
     for (var i in round) {
         var game = round[i];
@@ -244,7 +245,8 @@ function scoreUpdated(roundIndex, needUpdateLastRound) {
 
     setJSON();
     generateRanking();
-    if (needUpdateLastRound) {
+    if (!isLastRound) {
+console.log('Update last round');
         updateLastRound();
     }
 }
@@ -270,13 +272,13 @@ function updateLastRound() {
         if (game == null) {
             game = {
                 t1: {
-                    id: bestTeam[rankingCols.ID],
+                    id: bestTeam[rankingCols.ID]-1,
                     score: 0
                 }
             }
         } else {
             game.t2 = {
-                id: bestTeam[rankingCols.ID],
+                id: bestTeam[rankingCols.ID]-1,
                 score: 0
             }
             round.push(game);
@@ -369,7 +371,7 @@ function displayRanking() {
     dataSet = [];
     $.each( teamsList, function( key, val ) {
         var row = [];
-        row.push(val.id);
+        row.push(val.id+1);
         row.push(val.p1 + ' / ' + val.p2);
         if (val.scores.hasOwnProperty('plus')) {
             row.push(val.scores.plus); 
@@ -391,6 +393,8 @@ function displayRanking() {
         } else {
             row.push(0);
         }
+
+	row.push(0);
         dataSet.push(row);
     });
 
@@ -408,7 +412,13 @@ function displayRanking() {
             { title: "Plus" },
             { title: "Moins" },
             { title: "Diff." },
-            { title: "Victoires" }
+            { title: "Victoires" },
+            { title: "Ranking" }
         ]
     } );
+	rankingTable.on('order.dt search.dt', function () {
+		rankingTable.column(6, {search:'applied', order:'applied'}).nodes().each( function (cell, i) {
+cell.innerHTML= i+1;
+});
+}).draw();
 }
