@@ -1,0 +1,41 @@
+/**
+ * COMMON
+ **/
+.align-center {
+    text-align: center;
+}
+/**
+ * TOP
+ **/
+.ranking-btn {
+    margin-bottom:  10px;
+}
+/**
+ * TABS
+ **/
+.tab-pane {
+    padding:  10px;
+}
+/**
+ * PLAYERS
+ **/
+#players .row {
+    margin-bottom:  10px;
+}
+#players #p-nb-error {
+    display:  none;
+}
+/**
+ * ROUNDS
+ **/
+#tour1 .row,
+#tour2 .row,
+#tour3 .row {
+    margin-bottom:  10px;
+}
+/**
+ * RANKING
+ */
+#ranking-table {
+    width:  100% !important;
+}
