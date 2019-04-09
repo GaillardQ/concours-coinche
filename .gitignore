@@ -1,6 +1,5 @@
+# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
 
-# System Files
-.DS_Store
-Thumbs.db
+.idea
 concours-coinche.sublime-project
 concours-coinche.sublime-workspace
